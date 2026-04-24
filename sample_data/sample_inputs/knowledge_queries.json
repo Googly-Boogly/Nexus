@@ -1,0 +1,62 @@
+[
+  {
+    "query": "What are the escalation steps for a P1 incident and who needs to be notified at each level?",
+    "filters": {"category": "general", "clearance": "internal"},
+    "top_k": 5
+  },
+  {
+    "query": "How do I perform a PostgreSQL database failover and what is the RTO target?",
+    "filters": {"category": "runbooks"},
+    "top_k": 5
+  },
+  {
+    "query": "What are the SOC 2 Type II audit requirements for access control and authentication?",
+    "filters": {"category": "compliance", "clearance": "confidential"},
+    "top_k": 8
+  },
+  {
+    "query": "What instance types and naming conventions should I use when provisioning new EC2 servers?",
+    "filters": {"category": "infrastructure"},
+    "top_k": 5
+  },
+  {
+    "query": "How do I investigate high CPU utilization on a web server and what thresholds trigger auto-scaling?",
+    "filters": {},
+    "top_k": 6
+  },
+  {
+    "query": "What is the patch management SLA for critical CVE vulnerabilities and what is the approval process?",
+    "filters": {"category": "compliance"},
+    "top_k": 5
+  },
+  {
+    "query": "Explain the blameless postmortem process and what must be included in a P1 post-incident review",
+    "filters": {"category": "general"},
+    "top_k": 5
+  },
+  {
+    "query": "What are the steps to safely decommission an EC2 instance including snapshot and DNS cleanup?",
+    "filters": {"category": "infrastructure"},
+    "top_k": 6
+  },
+  {
+    "query": "What NIST 800-53 controls apply to audit logging and how should audit records be protected?",
+    "filters": {"category": "compliance", "clearance": "confidential"},
+    "top_k": 8
+  },
+  {
+    "query": "How should I respond to a suspected security breach including containment and notification steps?",
+    "filters": {"category": "runbooks"},
+    "top_k": 7
+  },
+  {
+    "query": "What are the data classification levels and what security controls apply to each level?",
+    "filters": {"category": "compliance"},
+    "top_k": 5
+  },
+  {
+    "query": "What is the reserved instance strategy for baseline vs burst capacity and how much can we save?",
+    "filters": {"category": "infrastructure"},
+    "top_k": 4
+  }
+]

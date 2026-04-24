@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: nexus_test
+          POSTGRES_USER: test
+        options: >-
+          --health-cmd "pg_isready -U test"
+          --health-interval 5s
+          --health-retries 10
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r backend/requirements.txt
+      - run: bandit -r backend/app -ll
+      - name: Run tests
+        run: pytest backend/tests/ -v --cov=app --cov-report=xml
+        env:
+          DATABASE_URL: postgresql+asyncpg://test:test@localhost/nexus_test
+          REDIS_URL: redis://localhost:6379/0
+          REDIS_PASSWORD: ""
+          QDRANT_URL: ""
+          SECRET_KEY: ci-test-secret-key-32-chars-minimum
+          DEMO_MODE: "true"
+          APP_ENV: test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd frontend && npm ci
+      - run: cd frontend && npm run typecheck
+      - run: cd frontend && npm run build

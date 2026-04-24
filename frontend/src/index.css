@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #040911;
+    color: #e2e8f0;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: #040911;
+    min-height: 100vh;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #040911;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1a2d4a;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00d4ff40;
+  }
+}
+
+@layer components {
+  .corner-bracket {
+    position: relative;
+  }
+
+  .corner-bracket::before,
+  .corner-bracket::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: #00d4ff;
+    border-style: solid;
+    opacity: 0.6;
+  }
+
+  .corner-bracket::before {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+  }
+
+  .corner-bracket::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+  }
+
+  .scan-line {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00d4ff20, transparent);
+    animation: scan 8s linear infinite;
+    z-index: 9999;
+  }
+
+  .glow-cyan {
+    text-shadow: 0 0 8px #00d4ff60;
+  }
+
+  .border-glow {
+    box-shadow: 0 0 12px #00d4ff15, inset 0 0 12px #00d4ff05;
+  }
+}

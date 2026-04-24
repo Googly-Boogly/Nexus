@@ -1,0 +1,90 @@
+[
+  {
+    "task_type": "infrastructure_provisioning",
+    "priority": "P3",
+    "title": "Provision ML Training Cluster",
+    "description": "Provision a GPU cluster for the data science team for quarterly model retraining. Requires 4x g4dn.xlarge instances in us-east-1a, attached to the ml-workloads VPC, with 500GB EBS volumes each. Budget tag: cost-center=DS-2024-Q1.",
+    "context": {
+      "instance_type": "g4dn.xlarge",
+      "instance_count": 4,
+      "region": "us-east-1",
+      "availability_zone": "us-east-1a",
+      "vpc_name": "ml-workloads",
+      "ebs_size_gb": 500,
+      "requested_by": "data-science-team",
+      "budget_tag": "DS-2024-Q1",
+      "estimated_duration_days": 14
+    }
+  },
+  {
+    "task_type": "infrastructure_provisioning",
+    "priority": "P2",
+    "title": "Deploy Payment Service v2.4.1",
+    "description": "Deploy payment-service:v2.4.1 to production ECS cluster. Rolling deployment with 25% max unavailable. Requires approval from payment-team-lead before execution. Blue-green cutover on final step.",
+    "context": {
+      "service_name": "payment-service",
+      "image_tag": "v2.4.1",
+      "cluster": "nexus-prod-ecs",
+      "deployment_strategy": "blue_green",
+      "max_unavailable_percent": 25,
+      "requires_approval": true,
+      "approver": "payment-team-lead",
+      "rollback_version": "v2.4.0",
+      "health_check_grace_period_seconds": 60
+    }
+  },
+  {
+    "task_type": "infrastructure_provisioning",
+    "priority": "P3",
+    "title": "Scale Read Replicas for Month-End Batch",
+    "description": "Add 3 RDS read replicas to the reporting cluster ahead of month-end financial batch jobs scheduled for 23:00 UTC on the 31st. Use db.r6g.2xlarge. Auto-decommission after batch window.",
+    "context": {
+      "cluster_identifier": "nexus-reporting-cluster",
+      "replica_count": 3,
+      "instance_class": "db.r6g.2xlarge",
+      "scale_up_at": "2024-01-31T22:30:00Z",
+      "scale_down_at": "2024-02-01T06:00:00Z",
+      "reason": "month_end_batch",
+      "engine": "aurora-postgresql",
+      "engine_version": "15.3"
+    }
+  },
+  {
+    "task_type": "infrastructure_provisioning",
+    "priority": "P3",
+    "title": "Decommission Legacy Analytics Servers",
+    "description": "Decommission 3 legacy bare-metal analytics servers (analytics-legacy-[01-03]) that have had zero traffic for 45 days. Final snapshots required. CMDB and DNS records must be updated.",
+    "context": {
+      "resources": [
+        {"id": "i-0abc123def456gh01", "name": "analytics-legacy-01", "type": "ec2"},
+        {"id": "i-0abc123def456gh02", "name": "analytics-legacy-02", "type": "ec2"},
+        {"id": "i-0abc123def456gh03", "name": "analytics-legacy-03", "type": "ec2"}
+      ],
+      "days_since_last_traffic": 45,
+      "final_snapshot_required": true,
+      "update_cmdb": true,
+      "update_dns": true,
+      "approved_by": "infra-team-lead",
+      "ticket": "ITSM-4821"
+    }
+  },
+  {
+    "task_type": "infrastructure_provisioning",
+    "priority": "P2",
+    "title": "Provision Isolated Dev Environment",
+    "description": "Provision a complete isolated dev environment for the new fraud-detection team. Needs its own VPC (10.20.0.0/16), 2 t3.medium app servers, 1 db.t3.medium RDS PostgreSQL instance, Redis ElastiCache, and NAT gateway.",
+    "context": {
+      "environment_name": "fraud-detection-dev",
+      "vpc_cidr": "10.20.0.0/16",
+      "app_instance_type": "t3.medium",
+      "app_instance_count": 2,
+      "db_instance_class": "db.t3.medium",
+      "db_engine": "postgres",
+      "db_engine_version": "15",
+      "cache_node_type": "cache.t3.micro",
+      "nat_gateway": true,
+      "owner_team": "fraud-detection",
+      "iac_template": "standard-3tier-vpc"
+    }
+  }
+]

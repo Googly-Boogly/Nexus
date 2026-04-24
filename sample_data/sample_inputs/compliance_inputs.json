@@ -1,0 +1,80 @@
+[
+  {
+    "task_type": "compliance_scan",
+    "priority": "P2",
+    "title": "SOC 2 Type II Pre-Audit Vulnerability Scan",
+    "description": "Run full vulnerability scan across production environment ahead of SOC 2 Type II audit scheduled for next week. Must cover all EC2 instances, RDS endpoints, EKS node groups, and externally-facing load balancers. Generate remediation plan for any Critical or High findings.",
+    "context": {
+      "audit_type": "SOC2_TYPE_II",
+      "scope": ["ec2_instances", "rds_endpoints", "eks_nodes", "load_balancers"],
+      "environment": "production",
+      "audit_scheduled": "2024-01-22",
+      "output_formats": ["pdf", "json"],
+      "remediation_plan_required": true,
+      "notify": ["ciso@nexuscorp.com", "audit-team@nexuscorp.com"]
+    }
+  },
+  {
+    "task_type": "compliance_scan",
+    "priority": "P1",
+    "title": "Emergency Patch Status Check — Critical CVE",
+    "description": "CVE-2024-0001 (CVSS 9.8) was published 2 hours ago affecting OpenSSL 3.x. Immediately audit all systems for vulnerable OpenSSL versions and identify unpatched instances. Generate priority patch schedule.",
+    "context": {
+      "cve_id": "CVE-2024-0001",
+      "cvss_score": 9.8,
+      "affected_software": "OpenSSL",
+      "affected_versions": ["3.0.0", "3.0.1", "3.0.2", "3.0.3", "3.0.4", "3.0.5", "3.0.6", "3.1.0"],
+      "patch_version": "3.0.7",
+      "urgency": "emergency",
+      "scan_scope": "all_production",
+      "sla_hours": 24
+    }
+  },
+  {
+    "task_type": "compliance_scan",
+    "priority": "P2",
+    "title": "Quarterly Access Rights Audit",
+    "description": "Conduct quarterly review of all IAM roles, service accounts, and user permissions across AWS and internal systems. Flag any violations of least-privilege principle, dormant accounts (>90 days inactive), and any accounts with overly permissive wildcard policies.",
+    "context": {
+      "audit_scope": ["aws_iam", "internal_ldap", "database_users", "k8s_rbac"],
+      "dormant_threshold_days": 90,
+      "flag_wildcard_policies": true,
+      "flag_root_usage": true,
+      "flag_mfa_disabled": true,
+      "output_report": true,
+      "remediation_deadline_days": 30,
+      "quarter": "Q1-2024"
+    }
+  },
+  {
+    "task_type": "compliance_scan",
+    "priority": "P3",
+    "title": "NIST 800-53 Control Verification",
+    "description": "Verify implementation of NIST 800-53 Rev 5 controls for the upcoming FedRAMP assessment. Focus on AC (Access Control), AU (Audit and Accountability), SC (System and Communications Protection), and SI (System and Information Integrity) control families.",
+    "context": {
+      "framework": "NIST_800_53_REV5",
+      "control_families": ["AC", "AU", "SC", "SI"],
+      "assessment_type": "FedRAMP_MODERATE",
+      "evidence_collection": true,
+      "control_count": 47,
+      "assessor": "external",
+      "report_due": "2024-02-15"
+    }
+  },
+  {
+    "task_type": "compliance_scan",
+    "priority": "P2",
+    "title": "Data Encryption Compliance Check",
+    "description": "Audit all data stores for encryption at rest and in transit compliance. Check S3 bucket policies, RDS encryption settings, EBS volume encryption, EFS encryption, and ensure all inter-service communication uses TLS 1.2+. Report any plaintext data exposures.",
+    "context": {
+      "check_at_rest": true,
+      "check_in_transit": true,
+      "minimum_tls_version": "1.2",
+      "data_stores": ["s3", "rds", "ebs", "efs", "elasticache", "dynamodb"],
+      "flag_plaintext_ports": [80, 8080, 5432, 3306, 6379],
+      "flag_unencrypted_s3": true,
+      "flag_unencrypted_rds": true,
+      "compliance_framework": "PCI_DSS_v4"
+    }
+  }
+]

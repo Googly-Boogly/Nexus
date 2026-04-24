@@ -1,0 +1,73 @@
+[
+  {
+    "task_type": "incident_response",
+    "priority": "P1",
+    "title": "Production API Gateway Down",
+    "description": "API gateway returning 502 errors for all requests. Approximately 3,500 customers affected. Started at 14:32 UTC. Load balancer health checks failing on all 4 API gateway instances.",
+    "context": {
+      "affected_systems": ["api-gateway-prod-1", "api-gateway-prod-2", "api-gateway-prod-3", "api-gateway-prod-4"],
+      "error_rate": "100%",
+      "customers_affected": 3500,
+      "started_at": "2024-01-15T14:32:00Z",
+      "alert_source": "PagerDuty",
+      "alert_id": "PD-20240115-001"
+    }
+  },
+  {
+    "task_type": "incident_response",
+    "priority": "P1",
+    "title": "Database Primary Failover Required",
+    "description": "Primary PostgreSQL database (db-prod-primary-01) is unresponsive. Replication lag on standby is 0 seconds — standby is current. Manual failover required to restore write operations. Application is in read-only mode.",
+    "context": {
+      "affected_systems": ["db-prod-primary-01", "db-prod-standby-01"],
+      "database": "nexus_production",
+      "replication_lag_seconds": 0,
+      "standby_host": "db-prod-standby-01",
+      "last_known_lsn": "0/A4F2B398",
+      "customers_affected": 12000
+    }
+  },
+  {
+    "task_type": "incident_response",
+    "priority": "P2",
+    "title": "High CPU on Web Server Cluster",
+    "description": "CPU utilization averaging 94% across web-prod-[01-06] for the past 22 minutes. P95 response time degraded from 180ms to 2,100ms. Auto-scaling triggered but new instances are not yet healthy.",
+    "context": {
+      "affected_systems": ["web-prod-01", "web-prod-02", "web-prod-03", "web-prod-04", "web-prod-05", "web-prod-06"],
+      "cpu_utilization_avg": 94,
+      "p95_response_time_ms": 2100,
+      "baseline_p95_ms": 180,
+      "scaling_in_progress": true,
+      "new_instances_pending": 2
+    }
+  },
+  {
+    "task_type": "incident_response",
+    "priority": "P2",
+    "title": "Suspicious Authentication Spike",
+    "description": "SIEM detected 847 failed authentication attempts against the admin portal from IP range 185.220.x.x (Tor exit nodes) in the last 10 minutes. 3 accounts have been locked due to brute-force protection.",
+    "context": {
+      "source_ip_range": "185.220.0.0/16",
+      "failed_attempts": 847,
+      "timeframe_minutes": 10,
+      "locked_accounts": ["svc-monitoring", "admin-backup", "deploy-user"],
+      "alert_source": "SIEM",
+      "threat_category": "brute_force"
+    }
+  },
+  {
+    "task_type": "incident_response",
+    "priority": "P3",
+    "title": "Celery Worker Queue Backlog",
+    "description": "SQS queue depth for async task processing has grown to 4,200 messages. Current processing rate is 45 msg/min vs normal 380 msg/min. 2 of 8 worker instances appear to be hanging on a specific job type.",
+    "context": {
+      "queue_name": "nexus-tasks-prod",
+      "queue_depth": 4200,
+      "normal_rate_per_min": 380,
+      "current_rate_per_min": 45,
+      "worker_instances": 8,
+      "hanging_workers": 2,
+      "stuck_job_type": "compliance_scan"
+    }
+  }
+]
